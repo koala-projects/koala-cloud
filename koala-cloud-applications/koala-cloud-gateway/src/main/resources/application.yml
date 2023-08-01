@@ -1,0 +1,23 @@
+server:
+  port: 8000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring:
+  application:
+    name: koala-cloud-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: koala-cloud
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: koala-cloud
+  config:
+    import:
+      - nacos:koala-cloud-gateway.yml?refresh=true
