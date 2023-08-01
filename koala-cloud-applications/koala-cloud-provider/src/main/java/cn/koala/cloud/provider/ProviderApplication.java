@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * TODO: 修改类描述
+ * 提供者应用
  *
  * @author Houtaroy
  */
