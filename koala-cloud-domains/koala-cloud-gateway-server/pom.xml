@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>koala-cloud-gateway-server</artifactId>
+  <description>考拉微服务网关服务</description>
+
+  <parent>
+    <groupId>cn.koala.cloud</groupId>
+    <artifactId>koala-cloud-parent</artifactId>
+    <version>${revision}</version>
+    <relativePath>../../koala-cloud-parent</relativePath>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>cn.koala</groupId>
+      <artifactId>koala-persist</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-gateway-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-jose</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-relational</artifactId>
+    </dependency>
+
+    <!--<dependency>-->
+    <!--  <groupId>org.springframework.boot</groupId>-->
+    <!--  <artifactId>spring-boot-starter-security</artifactId>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--  <groupId>org.springframework.boot</groupId>-->
+    <!--  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
+    <!--</dependency>-->
+
+    <!--<dependency>-->
+    <!--  <groupId>org.springframework.boot</groupId>-->
+    <!--  <artifactId>spring-boot-starter-data-r2dbc</artifactId>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--  <groupId>io.asyncer</groupId>-->
+    <!--  <artifactId>r2dbc-mysql</artifactId>-->
+    <!--  <version>1.0.4</version>-->
+    <!--</dependency>-->
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

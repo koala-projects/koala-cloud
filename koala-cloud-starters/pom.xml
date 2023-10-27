@@ -15,6 +15,6 @@
   </parent>
 
   <modules>
-    
+    <module>koala-cloud-gateway-starter</module>
   </modules>
 </project>

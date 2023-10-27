@@ -1,0 +1,26 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: koala-cloud-authorization-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: koala-cloud
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: koala-cloud
+  config:
+    import:
+      - nacos:koala-cloud-authorization-server.yml?refresh=true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/koala_dev?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: koala
+    password: koala
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-test-query: SELECT 1

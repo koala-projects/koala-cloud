@@ -7,7 +7,16 @@ management:
       exposure:
         include: '*'
 
+logging:
+  level:
+    org.springframework.security: debug
+    org.springframework.security.oauth2: debug
+
 spring:
+  r2dbc:
+    url: r2dbc:mysql://127.0.0.1:3306/koala_dev?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: koala
+    password: koala
   application:
     name: koala-cloud-gateway
   cloud:
@@ -21,3 +30,8 @@ spring:
   config:
     import:
       - nacos:koala-cloud-gateway.yml?refresh=true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8001

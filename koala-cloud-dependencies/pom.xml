@@ -15,10 +15,10 @@
   </parent>
 
   <properties>
-    <spring-boot.version>3.0.7</spring-boot.version>
-    <spring-cloud.version>2022.0.3</spring-cloud.version>
+    <!--<spring-boot.version>3.0.7</spring-boot.version>-->
+    <spring-cloud.version>2022.0.4</spring-cloud.version>
     <!--koala-->
-    <koala.version>2023.1.1-SNAPSHOT</koala.version>
+    <koala.version>2023.1.4-SNAPSHOT</koala.version>
     <!--lombok-->
     <lombok.version>1.18.28</lombok.version>
     <!--maven-->
@@ -28,13 +28,6 @@
   <dependencyManagement>
     <dependencies>
       <!--Bom-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies</artifactId>
@@ -55,6 +48,16 @@
         <version>${koala.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>cn.koala.cloud</groupId>
+        <artifactId>koala-cloud-gateway-server</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.koala.cloud</groupId>
+        <artifactId>koala-cloud-gateway-starter</artifactId>
+        <version>${revision}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

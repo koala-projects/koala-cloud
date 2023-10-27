@@ -3,8 +3,8 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>koala-cloud-gateway</artifactId>
-  <description>考拉微服务网关</description>
+  <artifactId>koala-cloud-gateway-starter</artifactId>
+  <description>考拉微服务网关启动模块</description>
 
   <parent>
     <groupId>cn.koala.cloud</groupId>
@@ -13,38 +13,29 @@
     <relativePath>../../koala-cloud-parent</relativePath>
   </parent>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>cn.koala.cloud</groupId>
-      <artifactId>koala-cloud-gateway-starter</artifactId>
+      <artifactId>koala-cloud-gateway-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-gateway</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
+      <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.asyncer</groupId>
-      <artifactId>r2dbc-mysql</artifactId>
-      <version>1.0.4</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-r2dbc</artifactId>
     </dependency>
   </dependencies>
 
