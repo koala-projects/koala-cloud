@@ -48,9 +48,9 @@ public class Route {
     result.setId(id);
     result.setUri(URI.create(uri));
     result.setOrder(sortIndex);
-    result.setPredicates(RouteUtils.yaml2PredicateDefinitions(predicates));
-    result.setFilters(RouteUtils.yaml2FilterDefinitions(filters));
-    Map<String, Object> metadata = RouteUtils.yaml2Metadata(this.metadata);
+    result.setPredicates(RouteUtils.json2PredicateDefinitions(predicates));
+    result.setFilters(RouteUtils.json2FilterDefinitions(filters));
+    Map<String, Object> metadata = RouteUtils.json2Metadata(this.metadata);
     metadata.put(METADATA_RESOURCE_ID_KEY, resourceId);
     result.setMetadata(metadata);
     return result;
