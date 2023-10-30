@@ -3,6 +3,7 @@ package cn.koala.cloud.gateway.config;
 import cn.koala.cloud.gateway.ApiAuthorizationRepository;
 import cn.koala.cloud.gateway.ApiRepository;
 import cn.koala.cloud.gateway.RouteRepository;
+import cn.koala.cloud.gateway.SimpleApiRequestMatcher;
 import cn.koala.cloud.gateway.filter.ApiAuthorizationGlobalFilter;
 import cn.koala.cloud.gateway.filter.ApiGlobalFilter;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
@@ -48,7 +49,7 @@ public class GatewayAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean(name = "apiGlobalFilter")
   public GlobalFilter apiGlobalFilter(ApiRepository apiRepository) {
-    return new ApiGlobalFilter(apiRepository);
+    return new ApiGlobalFilter(apiRepository, new SimpleApiRequestMatcher());
   }
 
   @Bean

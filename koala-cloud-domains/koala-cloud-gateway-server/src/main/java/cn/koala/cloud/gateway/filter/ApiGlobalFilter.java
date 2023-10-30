@@ -2,6 +2,7 @@ package cn.koala.cloud.gateway.filter;
 
 import cn.koala.cloud.gateway.Api;
 import cn.koala.cloud.gateway.ApiRepository;
+import cn.koala.cloud.gateway.ApiRequestMatcher;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -9,11 +10,8 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.pattern.PathPattern;
-import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,8 +24,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
-  private final PathPatternParser pathPatternParser = new PathPatternParser();
-  private final ApiRepository apiRepository;
+  private final ApiRepository repository;
+  private final ApiRequestMatcher matcher;
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -35,20 +33,12 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
     if (route == null || !StringUtils.hasText(route.getId())) {
       return chain.filter(exchange);
     }
-    return apiRepository
+    return repository
       .findByResourceIdAndIsEnabledAndIsDeleted(route.getId(), YesNo.YES.getValue(), YesNo.NO.getValue())
-      .filter(api -> isApi(exchange.getRequest(), api))
+      .filter(api -> matcher.matches(api, exchange.getRequest()))
       .next()
       .doOnNext(api -> exchange.getAttributes().put(Api.class.getName(), api))
       .then(chain.filter(exchange));
-  }
-
-  private boolean isApi(ServerHttpRequest request, Api api) {
-    if (request.getMethod().matches(api.getMethod())) {
-      PathPattern pattern = pathPatternParser.parse(api.getPath());
-      return pattern.matches(request.getPath());
-    }
-    return false;
   }
 
   @Override
