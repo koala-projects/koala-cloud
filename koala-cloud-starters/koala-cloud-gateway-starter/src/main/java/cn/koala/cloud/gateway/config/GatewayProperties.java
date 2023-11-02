@@ -12,5 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "koala.cloud.gateway")
 public class GatewayProperties {
 
+  private boolean dynamicRouting = false;
+
   private boolean logging = true;
 }

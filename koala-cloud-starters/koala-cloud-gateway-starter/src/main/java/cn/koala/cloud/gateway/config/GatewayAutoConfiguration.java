@@ -102,12 +102,14 @@ public class GatewayAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(name = "databaseRouteDefinitionLocator")
+  @ConditionalOnProperty(prefix = "koala.cloud.gateway", name = "dynamic-routing", havingValue = "true")
   public RouteDefinitionLocator databaseRouteDefinitionLocator(RouteRepository routeRepository) {
     return new DatabaseRouteDefinitionLocator(routeRepository);
   }
 
   @Bean
   @ConditionalOnMissingBean(name = "refreshRoutesTask")
+  @ConditionalOnProperty(prefix = "koala.cloud.gateway", name = "dynamic-routing", havingValue = "true")
   public RefreshRoutesTask refreshRoutesTask() {
     return new RefreshRoutesTask();
   }
