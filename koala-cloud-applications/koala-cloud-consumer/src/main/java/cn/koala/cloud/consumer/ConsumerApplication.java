@@ -6,9 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * 消费者应用
@@ -31,9 +37,14 @@ public class ConsumerApplication {
 
   private final TestService testService;
 
-  @RequestMapping("/test")
-  public String test() {
+  @RequestMapping("/test/{id}")
+  public String test(@PathVariable("id") Long id) {
     return this.testService.test();
+  }
+
+  @PostMapping("/test/post")
+  public ResponseEntity<Map<String, Object>> post(@RequestBody Map<String, Object> body) {
+    return ResponseEntity.ok(Map.of("data", "test"));
   }
 
   public static void main(String[] args) {
