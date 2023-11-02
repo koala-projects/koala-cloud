@@ -3,6 +3,7 @@ package cn.koala.cloud.gateway.filter;
 import cn.koala.cloud.gateway.Api;
 import cn.koala.cloud.gateway.ApiRepository;
 import cn.koala.cloud.gateway.ApiRequestMatcher;
+import cn.koala.cloud.gateway.util.RouteUtils;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -33,8 +34,12 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
     if (route == null || !StringUtils.hasText(route.getId())) {
       return chain.filter(exchange);
     }
-    return repository
-      .findByResourceIdAndIsEnabledAndIsDeleted(route.getId(), YesNo.YES.getValue(), YesNo.NO.getValue())
+    Long resourceId = Long.valueOf(route.getMetadata().get(cn.koala.cloud.gateway.Route.METADATA_RESOURCE_ID_KEY).toString());
+    return repository.findByResourceIdAndIsEnabledAndIsDeleted(
+        RouteUtils.obtainResourceId(route),
+        YesNo.YES.getValue(),
+        YesNo.NO.getValue()
+      )
       .filter(api -> matcher.matches(api, exchange.getRequest()))
       .next()
       .doOnNext(api -> exchange.getAttributes().put(Api.class.getName(), api))

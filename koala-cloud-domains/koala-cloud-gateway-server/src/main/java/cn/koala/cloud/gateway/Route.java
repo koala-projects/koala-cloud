@@ -1,6 +1,6 @@
 package cn.koala.cloud.gateway;
 
-import cn.koala.cloud.gateway.support.RouteUtils;
+import cn.koala.cloud.gateway.util.RouteUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -40,6 +41,14 @@ public class Route {
   private String metadata;
 
   private Integer sortIndex;
+
+  private Long createdBy;
+
+  private LocalDateTime createdTime;
+
+  private Long lastModifiedBy;
+
+  private LocalDateTime lastModifiedTime;
 
   private Integer isDeleted;
 

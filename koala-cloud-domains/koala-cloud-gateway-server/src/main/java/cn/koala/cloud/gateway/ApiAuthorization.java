@@ -37,7 +37,13 @@ public class ApiAuthorization {
   @Convert(converter = StringListConverter.class)
   private List<String> ips;
 
-  private Integer isDeleted;
+  private Long createdBy;
 
   private LocalDateTime createdTime;
+
+  private Long lastModifiedBy;
+
+  private LocalDateTime lastModifiedTime;
+
+  private Integer isDeleted;
 }
