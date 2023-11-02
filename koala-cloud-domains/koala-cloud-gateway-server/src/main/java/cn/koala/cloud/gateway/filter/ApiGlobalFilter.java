@@ -34,7 +34,6 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
     if (route == null || !StringUtils.hasText(route.getId())) {
       return chain.filter(exchange);
     }
-    Long resourceId = Long.valueOf(route.getMetadata().get(cn.koala.cloud.gateway.Route.METADATA_RESOURCE_ID_KEY).toString());
     return repository.findByResourceIdAndIsEnabledAndIsDeleted(
         RouteUtils.obtainResourceId(route),
         YesNo.YES.getValue(),
