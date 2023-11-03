@@ -9,15 +9,15 @@ import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import reactor.core.publisher.Flux;
 
 /**
- * 请求体包装器
+ * 自定义请求体请求包装器
  *
  * @author Houtaroy
  */
-public class RequestBodyDecorator extends ServerHttpRequestDecorator {
+public class CustomRequestBodyDecorator extends ServerHttpRequestDecorator {
 
   private final byte[] body;
 
-  public RequestBodyDecorator(ServerHttpRequest delegate, byte[] body) {
+  public CustomRequestBodyDecorator(ServerHttpRequest delegate, byte[] body) {
     super(delegate);
     this.body = body;
   }
