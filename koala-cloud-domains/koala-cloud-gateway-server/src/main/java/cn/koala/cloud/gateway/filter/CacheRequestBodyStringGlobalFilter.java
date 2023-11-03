@@ -37,6 +37,6 @@ public class CacheRequestBodyStringGlobalFilter implements GlobalFilter, Ordered
 
   @Override
   public int getOrder() {
-    return 0;
+    return FilterOrders.CACHE_REQUEST_BODY_STRING;
   }
 }

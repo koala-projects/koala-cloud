@@ -3,6 +3,7 @@ package cn.koala.cloud.gateway.filter;
 import cn.koala.cloud.gateway.model.Api;
 import cn.koala.cloud.gateway.model.ApiAuthorization;
 import cn.koala.cloud.gateway.model.ApiRequestLog;
+import cn.koala.cloud.gateway.model.RegisteredClient;
 import cn.koala.cloud.gateway.repository.ApiRequestLogRepository;
 import cn.koala.cloud.gateway.repository.RegisteredClientRepository;
 import cn.koala.cloud.gateway.repository.ResourceRepository;
@@ -15,7 +16,6 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -47,6 +47,7 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
 
     log.setId(exchange.getAttribute(ServerWebExchange.LOG_ID_ATTRIBUTE));
     log.setRequestTime(LocalDateTime.now());
+    log.setClient(toJson(exchange.getAttribute(RegisteredClient.class.getName())));
     log.setApi(toJson(exchange.getAttribute(Api.class.getName())));
     log.setApiAuthorization(toJson(exchange.getAttribute(ApiAuthorization.class.getName())));
     log.setRequestUri(exchange.getRequest().getURI().toString());
@@ -62,27 +63,12 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
 
     Mono<ApiRequestLog> result = Mono.defer(() -> Mono.just(log));
 
-    result = setClient(exchange, result);
-
     result = setRoute(exchange, result);
 
     result = setResource(exchange, result);
 
     log.setLogTime(LocalDateTime.now());
 
-    return result;
-  }
-
-  private Mono<ApiRequestLog> setClient(ServerWebExchange exchange, Mono<ApiRequestLog> result) {
-    String clientId = exchange.getAttribute(OAuth2ParameterNames.CLIENT_ID);
-    if (StringUtils.hasText(clientId)) {
-      result = result.flatMap(log ->
-        clientRepository.findByClientId(clientId).map(client -> {
-          log.setClient(toJson(client));
-          return log;
-        })
-      );
-    }
     return result;
   }
 
@@ -126,6 +112,6 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 1200;
+    return FilterOrders.API_REQUEST_LOG;
   }
 }

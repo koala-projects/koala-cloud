@@ -1,5 +1,6 @@
 package cn.koala.cloud.gateway.filter.factory;
 
+import cn.koala.cloud.gateway.filter.FilterOrders;
 import cn.koala.cloud.gateway.model.ApiAuthorization;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
@@ -35,7 +36,7 @@ public class ApiIpGatewayFilterFactory extends AbstractGatewayFilterFactory<ApiI
       }
       exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
       return exchange.getResponse().setComplete();
-    }, 1100);
+    }, FilterOrders.API_IP);
   }
 
   private String obtainIp(ServerHttpRequest request) {

@@ -18,7 +18,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -30,7 +29,6 @@ import java.util.Base64;
  *
  * @author Houtaroy
  */
-@Component
 @RequiredArgsConstructor
 public class EncryptResponseGlobalFilter implements GlobalFilter, Ordered {
 
@@ -75,6 +73,6 @@ public class EncryptResponseGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return -1000;
+    return FilterOrders.ENCRYPT_RESPONSE;
   }
 }

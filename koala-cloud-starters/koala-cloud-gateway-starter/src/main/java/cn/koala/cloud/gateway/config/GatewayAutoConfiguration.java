@@ -1,11 +1,12 @@
 package cn.koala.cloud.gateway.config;
 
-import cn.koala.cloud.gateway.filter.ApiAuthorizationGlobalFilter;
-import cn.koala.cloud.gateway.filter.ApiGlobalFilter;
+import cn.koala.cloud.gateway.filter.ApiAttributeGlobalFilter;
+import cn.koala.cloud.gateway.filter.ApiAuthorizationAttributeGlobalFilter;
 import cn.koala.cloud.gateway.filter.ApiRequestLogGlobalFilter;
 import cn.koala.cloud.gateway.filter.ApiResponseLogGlobalFilter;
 import cn.koala.cloud.gateway.filter.CacheRequestBodyStringGlobalFilter;
 import cn.koala.cloud.gateway.filter.DecryptRequestGlobalFilter;
+import cn.koala.cloud.gateway.filter.EncryptResponseGlobalFilter;
 import cn.koala.cloud.gateway.filter.RegisteredClientGlobalFilter;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiIpGatewayFilterFactory;
@@ -68,29 +69,15 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "apiGlobalFilter")
-  public GlobalFilter apiGlobalFilter(ApiRepository apiRepository) {
-    return new ApiGlobalFilter(apiRepository, new SimpleApiRequestMatcher());
+  @ConditionalOnMissingBean(name = "apiAttributeGlobalFilter")
+  public GlobalFilter apiAttributeGlobalFilter(ApiRepository apiRepository) {
+    return new ApiAttributeGlobalFilter(apiRepository, new SimpleApiRequestMatcher());
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "apiAuthorizationGlobalFilter")
-  public GlobalFilter apiAuthorizationGlobalFilter(ApiAuthorizationRepository apiAuthorizationRepository) {
-    return new ApiAuthorizationGlobalFilter(apiAuthorizationRepository);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(name = "decryptRequestGlobalFilter")
-  public GlobalFilter decryptRequestGlobalFilter(ObjectMapper objectMapper) {
-    return new DecryptRequestGlobalFilter(objectMapper);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(name = "apiResponseLogGlobalFilter")
-  public GlobalFilter apiResponseLogGlobalFilter(ApiResponseLogRepository apiResponseLogRepository,
-                                                 ObjectMapper objectMapper) {
-
-    return new ApiResponseLogGlobalFilter(apiResponseLogRepository, objectMapper);
+  @ConditionalOnMissingBean(name = "apiAuthorizationAttributeGlobalFilter")
+  public GlobalFilter apiAuthorizationAttributeGlobalFilter(ApiAuthorizationRepository apiAuthorizationRepository) {
+    return new ApiAuthorizationAttributeGlobalFilter(apiAuthorizationRepository);
   }
 
   @Bean
@@ -102,6 +89,26 @@ public class GatewayAutoConfiguration {
 
     return new ApiRequestLogGlobalFilter(apiRequestLogRepository, clientRepository, routeRepository,
       resourceRepository, objectMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "decryptRequestGlobalFilter")
+  public GlobalFilter decryptRequestGlobalFilter(ObjectMapper objectMapper) {
+    return new DecryptRequestGlobalFilter(objectMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "encryptResponseGlobalFilter")
+  public GlobalFilter encryptResponseGlobalFilter(ObjectMapper objectMapper) {
+    return new EncryptResponseGlobalFilter(objectMapper);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "apiResponseLogGlobalFilter")
+  public GlobalFilter apiResponseLogGlobalFilter(ApiResponseLogRepository apiResponseLogRepository,
+                                                 ObjectMapper objectMapper) {
+
+    return new ApiResponseLogGlobalFilter(apiResponseLogRepository, objectMapper);
   }
 
   @Bean

@@ -23,7 +23,7 @@ import java.time.LocalDate;
  * @author Houtaroy
  */
 @RequiredArgsConstructor
-public class ApiAuthorizationGlobalFilter implements GlobalFilter, Ordered {
+public class ApiAuthorizationAttributeGlobalFilter implements GlobalFilter, Ordered {
 
   private final ApiAuthorizationRepository apiAuthorizationRepository;
 
@@ -42,6 +42,6 @@ public class ApiAuthorizationGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 300;
+    return FilterOrders.API_AUTHORIZATION_ATTRIBUTE;
   }
 }

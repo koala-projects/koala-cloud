@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
  * @author Houtaroy
  */
 @RequiredArgsConstructor
-public class ApiGlobalFilter implements GlobalFilter, Ordered {
+public class ApiAttributeGlobalFilter implements GlobalFilter, Ordered {
 
   private final ApiRepository repository;
   private final ApiRequestMatcher matcher;
@@ -47,6 +47,6 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 200;
+    return FilterOrders.API_ATTRIBUTE;
   }
 }

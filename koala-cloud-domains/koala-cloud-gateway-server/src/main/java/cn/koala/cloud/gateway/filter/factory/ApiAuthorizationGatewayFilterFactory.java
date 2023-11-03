@@ -1,5 +1,6 @@
 package cn.koala.cloud.gateway.filter.factory;
 
+import cn.koala.cloud.gateway.filter.FilterOrders;
 import cn.koala.cloud.gateway.model.Api;
 import cn.koala.cloud.gateway.model.ApiAuthorization;
 import cn.koala.persist.domain.YesNo;
@@ -33,7 +34,7 @@ public class ApiAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
         return exchange.getResponse().setComplete();
       }
       return chain.filter(exchange);
-    }, 1000);
+    }, FilterOrders.API_AUTHORIZATION);
   }
 
   public static class Config {

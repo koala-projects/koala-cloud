@@ -73,6 +73,6 @@ public class DecryptRequestGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 400;
+    return FilterOrders.DECRYPT_REQUEST;
   }
 }
