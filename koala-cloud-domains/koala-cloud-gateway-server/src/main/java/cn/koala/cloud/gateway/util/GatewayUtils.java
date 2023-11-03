@@ -5,7 +5,7 @@ import cn.koala.cloud.gateway.model.RegisteredClient;
 import cn.koala.persist.domain.YesNo;
 
 /**
- * TODO: 修改类描述
+ * 网关工具类
  *
  * @author Houtaroy
  */
