@@ -1,5 +1,6 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.web;
 
+import cn.koala.cloud.gateway.model.Api;
 import lombok.NonNull;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.util.pattern.PathPattern;

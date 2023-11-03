@@ -1,12 +1,13 @@
 package cn.koala.cloud.gateway.filter;
 
-import cn.koala.cloud.gateway.Api;
-import cn.koala.cloud.gateway.ApiAuthorization;
-import cn.koala.cloud.gateway.ApiRequestLog;
-import cn.koala.cloud.gateway.ApiRequestLogRepository;
-import cn.koala.cloud.gateway.RegisteredClientRepository;
-import cn.koala.cloud.gateway.ResourceRepository;
-import cn.koala.cloud.gateway.RouteRepository;
+import cn.koala.cloud.gateway.model.Api;
+import cn.koala.cloud.gateway.model.ApiAuthorization;
+import cn.koala.cloud.gateway.model.ApiRequestLog;
+import cn.koala.cloud.gateway.repository.ApiRequestLogRepository;
+import cn.koala.cloud.gateway.repository.RegisteredClientRepository;
+import cn.koala.cloud.gateway.repository.ResourceRepository;
+import cn.koala.cloud.gateway.repository.RouteRepository;
+import cn.koala.cloud.gateway.web.ServerWebExchangeAttributeNames;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -54,7 +55,7 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
     log.setRequestHeaders(toJson(exchange.getRequest().getHeaders()));
     log.setRequestToken(exchange.getRequest().getHeaders().getFirst("Authorization"));
 
-    String requestBody = exchange.getAttribute(ApiLogPreparationGlobalFilter.CACHED_REQUEST_BODY_STRING_ATTR);
+    String requestBody = exchange.getAttribute(ServerWebExchangeAttributeNames.CACHED_REQUEST_BODY_STRING);
     if (StringUtils.hasText(requestBody)) {
       log.setRequestBody(requestBody);
     }

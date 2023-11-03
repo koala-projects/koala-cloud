@@ -1,8 +1,8 @@
 package cn.koala.cloud.gateway.filter;
 
-import cn.koala.cloud.gateway.Api;
-import cn.koala.cloud.gateway.ApiAuthorization;
-import cn.koala.cloud.gateway.ApiAuthorizationRepository;
+import cn.koala.cloud.gateway.model.Api;
+import cn.koala.cloud.gateway.model.ApiAuthorization;
+import cn.koala.cloud.gateway.repository.ApiAuthorizationRepository;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -42,6 +42,6 @@ public class ApiAuthorizationGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 1100;
+    return 300;
   }
 }

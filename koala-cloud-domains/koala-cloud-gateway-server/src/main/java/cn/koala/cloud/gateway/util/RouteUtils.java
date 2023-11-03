@@ -66,7 +66,7 @@ public abstract class RouteUtils {
   }
 
   public static Long obtainResourceId(Route route) {
-    return Optional.ofNullable(route.getMetadata().get(cn.koala.cloud.gateway.Route.METADATA_RESOURCE_ID_KEY))
+    return Optional.ofNullable(route.getMetadata().get(cn.koala.cloud.gateway.model.Route.METADATA_RESOURCE_ID_KEY))
       .map(Object::toString)
       .map(Long::valueOf)
       .orElse(null);

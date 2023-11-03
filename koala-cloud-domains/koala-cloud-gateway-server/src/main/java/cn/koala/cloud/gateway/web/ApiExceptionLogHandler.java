@@ -1,5 +1,7 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.web;
 
+import cn.koala.cloud.gateway.model.ApiExceptionLog;
+import cn.koala.cloud.gateway.repository.ApiExceptionLogRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.server.ServerWebExchange;

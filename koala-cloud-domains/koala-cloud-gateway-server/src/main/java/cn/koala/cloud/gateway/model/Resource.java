@@ -1,4 +1,4 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,34 +9,26 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 /**
- * 接口实体类
+ * 资源
  *
  * @author Houtaroy
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("k_api")
-public class Api {
+@Table("k_resource")
+public class Resource {
 
   @Id
   private Long id;
 
-  private Long resourceId;
+  private Integer type;
 
   private String code;
 
   private String name;
 
   private String description;
-
-  private String path;
-
-  private String method;
-
-  private Integer isPermissible;
-
-  private Integer isEnabled;
 
   private Long createdBy;
 
@@ -45,6 +37,4 @@ public class Api {
   private Long lastModifiedBy;
 
   private LocalDateTime lastModifiedTime;
-
-  private Integer isDeleted;
 }

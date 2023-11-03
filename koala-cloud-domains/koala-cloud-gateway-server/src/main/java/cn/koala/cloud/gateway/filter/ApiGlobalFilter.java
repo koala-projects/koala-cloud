@@ -1,9 +1,9 @@
 package cn.koala.cloud.gateway.filter;
 
-import cn.koala.cloud.gateway.Api;
-import cn.koala.cloud.gateway.ApiRepository;
-import cn.koala.cloud.gateway.ApiRequestMatcher;
+import cn.koala.cloud.gateway.model.Api;
+import cn.koala.cloud.gateway.repository.ApiRepository;
 import cn.koala.cloud.gateway.util.RouteUtils;
+import cn.koala.cloud.gateway.web.ApiRequestMatcher;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -47,6 +47,6 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 1000;
+    return 200;
   }
 }

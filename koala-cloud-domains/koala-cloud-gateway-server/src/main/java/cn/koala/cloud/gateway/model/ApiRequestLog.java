@@ -1,4 +1,4 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package cn.koala.cloud.gateway.filter.factory;
 
-import cn.koala.cloud.gateway.Api;
-import cn.koala.cloud.gateway.ApiAuthorization;
+import cn.koala.cloud.gateway.model.Api;
+import cn.koala.cloud.gateway.model.ApiAuthorization;
 import cn.koala.persist.domain.YesNo;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
@@ -33,7 +33,7 @@ public class ApiAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
         return exchange.getResponse().setComplete();
       }
       return chain.filter(exchange);
-    }, 2000);
+    }, 1000);
   }
 
   public static class Config {

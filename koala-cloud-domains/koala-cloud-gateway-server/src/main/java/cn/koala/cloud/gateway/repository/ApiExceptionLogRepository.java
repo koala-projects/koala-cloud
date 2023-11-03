@@ -1,5 +1,6 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.repository;
 
+import cn.koala.cloud.gateway.model.ApiExceptionLog;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 /**

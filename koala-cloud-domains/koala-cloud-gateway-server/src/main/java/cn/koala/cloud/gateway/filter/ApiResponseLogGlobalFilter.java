@@ -1,21 +1,19 @@
 package cn.koala.cloud.gateway.filter;
 
-import cn.koala.cloud.gateway.ApiResponseLog;
-import cn.koala.cloud.gateway.ApiResponseLogRepository;
+import cn.koala.cloud.gateway.model.ApiResponseLog;
+import cn.koala.cloud.gateway.repository.ApiResponseLogRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.web.server.ServerWebExchange;
@@ -27,45 +25,22 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
- * 接口日志准备全局过滤器
- * <p>
- * 缓存请求体字符串, 包装响应
+ * 接口响应日志全局过滤器
  *
  * @author Houtaroy
  */
 @RequiredArgsConstructor
-public class ApiLogPreparationGlobalFilter implements GlobalFilter, Ordered {
-
-  public static final String CACHED_REQUEST_BODY_STRING_ATTR = "cachedRequestBodyString";
+public class ApiResponseLogGlobalFilter implements GlobalFilter, Ordered {
 
   private final ApiResponseLogRepository apiResponseLogRepository;
   private final ObjectMapper objectMapper;
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    return cacheRequestBody(exchange).flatMap(request -> chain.filter(decorate(exchange, request)));
+    return chain.filter(exchange.mutate().response(decorate(exchange)).build());
   }
 
-  private Mono<ServerHttpRequest> cacheRequestBody(ServerWebExchange exchange) {
-    return ServerWebExchangeUtils.cacheRequestBody(exchange, (serverHttpRequest) ->
-      serverHttpRequest.getBody().collectList().map(dataBuffers -> {
-        StringBuilder sb = new StringBuilder();
-        dataBuffers.forEach(dataBuffer -> {
-          byte[] bytes = new byte[dataBuffer.readableByteCount()];
-          dataBuffer.read(bytes);
-          sb.append(new String(bytes, StandardCharsets.UTF_8));
-        });
-        exchange.getAttributes().put(CACHED_REQUEST_BODY_STRING_ATTR, sb.toString());
-        return serverHttpRequest;
-      })
-    );
-  }
-
-  private ServerWebExchange decorate(ServerWebExchange exchange, ServerHttpRequest request) {
-    return exchange.mutate().request(request).response(decorateResponse(exchange)).build();
-  }
-
-  private ServerHttpResponse decorateResponse(ServerWebExchange exchange) {
+  private ServerHttpResponse decorate(ServerWebExchange exchange) {
     return new ServerHttpResponseDecorator(exchange.getResponse()) {
       @Override
       @NonNull
@@ -114,7 +89,6 @@ public class ApiLogPreparationGlobalFilter implements GlobalFilter, Ordered {
   }
 
   @Override
-
   public int getOrder() {
     return Ordered.HIGHEST_PRECEDENCE;
   }

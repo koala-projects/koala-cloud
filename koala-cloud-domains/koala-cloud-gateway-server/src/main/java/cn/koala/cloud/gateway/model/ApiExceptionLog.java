@@ -1,4 +1,4 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.model;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

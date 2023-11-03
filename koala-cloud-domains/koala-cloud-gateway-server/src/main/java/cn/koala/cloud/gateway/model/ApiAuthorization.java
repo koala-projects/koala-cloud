@@ -1,7 +1,5 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.model;
 
-import cn.koala.persist.converter.StringListConverter;
-import jakarta.persistence.Convert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +32,6 @@ public class ApiAuthorization {
 
   private Integer quota;
 
-  @Convert(converter = StringListConverter.class)
   private List<String> ips;
 
   private Long createdBy;

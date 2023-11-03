@@ -1,4 +1,4 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.model;
 
 import cn.koala.cloud.gateway.util.RouteUtils;
 import lombok.AllArgsConstructor;

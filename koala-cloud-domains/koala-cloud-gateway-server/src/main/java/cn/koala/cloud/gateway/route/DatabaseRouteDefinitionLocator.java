@@ -1,7 +1,7 @@
 package cn.koala.cloud.gateway.route;
 
-import cn.koala.cloud.gateway.Route;
-import cn.koala.cloud.gateway.RouteRepository;
+import cn.koala.cloud.gateway.model.Route;
+import cn.koala.cloud.gateway.repository.RouteRepository;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteDefinition;

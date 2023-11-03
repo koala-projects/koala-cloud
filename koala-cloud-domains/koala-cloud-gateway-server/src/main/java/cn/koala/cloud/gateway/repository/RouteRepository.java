@@ -1,5 +1,6 @@
-package cn.koala.cloud.gateway;
+package cn.koala.cloud.gateway.repository;
 
+import cn.koala.cloud.gateway.model.Route;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
