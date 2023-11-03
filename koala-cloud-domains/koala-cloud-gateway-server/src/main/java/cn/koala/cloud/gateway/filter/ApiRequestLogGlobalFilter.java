@@ -5,7 +5,6 @@ import cn.koala.cloud.gateway.model.ApiAuthorization;
 import cn.koala.cloud.gateway.model.ApiRequestLog;
 import cn.koala.cloud.gateway.model.RegisteredClient;
 import cn.koala.cloud.gateway.repository.ApiRequestLogRepository;
-import cn.koala.cloud.gateway.repository.RegisteredClientRepository;
 import cn.koala.cloud.gateway.repository.ResourceRepository;
 import cn.koala.cloud.gateway.repository.RouteRepository;
 import cn.koala.cloud.gateway.web.ServerWebExchangeAttributeNames;
@@ -31,7 +30,6 @@ import java.time.LocalDateTime;
 public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
 
   private final ApiRequestLogRepository apiRequestLogRepository;
-  private final RegisteredClientRepository clientRepository;
   private final RouteRepository routeRepository;
   private final ResourceRepository resourceRepository;
   private final ObjectMapper objectMapper;
