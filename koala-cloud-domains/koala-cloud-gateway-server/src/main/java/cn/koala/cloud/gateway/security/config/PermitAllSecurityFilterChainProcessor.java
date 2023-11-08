@@ -23,7 +23,7 @@ public class PermitAllSecurityFilterChainProcessor implements GatewayServerSecur
   }
 
   @Override
-  public void preBuild(ServerHttpSecurity http) throws Exception {
+  public void preBuild(ServerHttpSecurity http) {
     if (ObjectUtils.isEmpty(this.patterns)) {
       return;
     }
@@ -31,7 +31,7 @@ public class PermitAllSecurityFilterChainProcessor implements GatewayServerSecur
   }
 
   @Override
-  public void postBuild(ServerHttpSecurity http) throws Exception {
+  public void postBuild(ServerHttpSecurity http) {
 
   }
 }

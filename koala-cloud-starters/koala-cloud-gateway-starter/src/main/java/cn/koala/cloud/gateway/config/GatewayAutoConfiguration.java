@@ -103,10 +103,9 @@ public class GatewayAutoConfiguration {
   @ConditionalOnMissingBean(name = "apiRequestLogGlobalFilter")
   @ConditionalOnProperty(prefix = "koala.cloud.gateway", name = "logging", havingValue = "true", matchIfMissing = true)
   public GlobalFilter apiRequestLogGlobalFilter(
-    ApiRequestLogRepository apiRequestLogRepository, RouteRepository routeRepository,
-    ResourceRepository resourceRepository, ObjectMapper objectMapper) {
+    ApiRequestLogRepository apiRequestLogRepository, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
 
-    return new ApiRequestLogGlobalFilter(apiRequestLogRepository, routeRepository, resourceRepository, objectMapper);
+    return new ApiRequestLogGlobalFilter(apiRequestLogRepository, resourceRepository, objectMapper);
   }
 
   @Bean
