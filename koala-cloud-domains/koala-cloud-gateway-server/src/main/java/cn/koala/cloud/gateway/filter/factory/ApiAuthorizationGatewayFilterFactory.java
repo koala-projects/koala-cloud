@@ -7,6 +7,7 @@ import cn.koala.persist.domain.YesNo;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -22,19 +23,25 @@ public class ApiAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
 
   @Override
   public GatewayFilter apply(Config config) {
-    return new OrderedGatewayFilter((exchange, chain) -> {
-      Api api = exchange.getAttribute(Api.class.getName());
-      ApiAuthorization authorization = exchange.getAttribute(ApiAuthorization.class.getName());
-      if (api == null) {
-        exchange.getResponse().setStatusCode(HttpStatus.NOT_FOUND);
-        return exchange.getResponse().setComplete();
-      }
-      if (api.getIsPermissible() == YesNo.NO.getValue() && authorization == null) {
-        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-        return exchange.getResponse().setComplete();
-      }
-      return chain.filter(exchange);
-    }, FilterOrders.API_AUTHORIZATION);
+    return new OrderedGatewayFilter(
+      (exchange, chain) -> {
+
+        Api api = exchange.getAttribute(Api.class.getName());
+        if (api == null) {
+          ServerWebExchangeUtils.setResponseStatus(exchange, HttpStatus.NOT_FOUND);
+          return exchange.getResponse().setComplete();
+        }
+
+        ApiAuthorization authorization = exchange.getAttribute(ApiAuthorization.class.getName());
+        if (api.getIsPermissible() == YesNo.NO.getValue() && authorization == null) {
+          ServerWebExchangeUtils.setResponseStatus(exchange, HttpStatus.FORBIDDEN);
+          return exchange.getResponse().setComplete();
+        }
+
+        return chain.filter(exchange);
+      },
+      FilterOrders.API_AUTHORIZATION
+    );
   }
 
   public static class Config {

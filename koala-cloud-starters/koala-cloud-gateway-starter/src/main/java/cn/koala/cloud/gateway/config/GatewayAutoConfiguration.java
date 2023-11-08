@@ -8,10 +8,12 @@ import cn.koala.cloud.gateway.filter.CacheRequestBodyStringGlobalFilter;
 import cn.koala.cloud.gateway.filter.DecryptRequestGlobalFilter;
 import cn.koala.cloud.gateway.filter.EncryptResponseGlobalFilter;
 import cn.koala.cloud.gateway.filter.RegisteredClientGlobalFilter;
+import cn.koala.cloud.gateway.filter.ResourceAttributeGlobalFilter;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiIpGatewayFilterFactory;
 import cn.koala.cloud.gateway.model.converter.StringClientSettingsConverter;
 import cn.koala.cloud.gateway.repository.ApiAuthorizationRepository;
+import cn.koala.cloud.gateway.repository.ApiDocumentRepository;
 import cn.koala.cloud.gateway.repository.ApiExceptionLogRepository;
 import cn.koala.cloud.gateway.repository.ApiRepository;
 import cn.koala.cloud.gateway.repository.ApiRequestLogRepository;
@@ -20,11 +22,19 @@ import cn.koala.cloud.gateway.repository.RegisteredClientRepository;
 import cn.koala.cloud.gateway.repository.ResourceRepository;
 import cn.koala.cloud.gateway.repository.RouteRepository;
 import cn.koala.cloud.gateway.route.DatabaseRouteDefinitionLocator;
-import cn.koala.cloud.gateway.security.authorization.OAuth2ReactiveAuthorizationManager;
+import cn.koala.cloud.gateway.security.config.GatewayServerSecurityFilterChainProcessor;
+import cn.koala.cloud.gateway.security.config.OAuth2ReactiveSecurityFilterChainProcessor;
+import cn.koala.cloud.gateway.security.config.PermitAllSecurityFilterChainProcessor;
+import cn.koala.cloud.gateway.security.config.SecurityFilterChainProcessorOrders;
+import cn.koala.cloud.gateway.springdoc.SwaggerConfigApi;
 import cn.koala.cloud.gateway.task.RefreshRoutesTask;
 import cn.koala.cloud.gateway.web.ApiExceptionLogHandler;
 import cn.koala.cloud.gateway.web.SimpleApiRequestMatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
+import org.springdoc.webflux.ui.SwaggerConfigResource;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -42,7 +52,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.WebExceptionHandler;
+
+import java.util.List;
 
 /**
  * 网关自动配置类
@@ -66,6 +79,12 @@ public class GatewayAutoConfiguration {
   @ConditionalOnMissingBean(name = "registeredClientGlobalFilter")
   public GlobalFilter registeredClientGlobalFilter(RegisteredClientRepository registeredClientRepository) {
     return new RegisteredClientGlobalFilter(registeredClientRepository);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "resourceAttributeGlobalFilter")
+  public GlobalFilter resourceAttributeGlobalFilter(ResourceRepository resourceRepository) {
+    return new ResourceAttributeGlobalFilter(resourceRepository);
   }
 
   @Bean
@@ -144,15 +163,43 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
+  @Order(SecurityFilterChainProcessorOrders.OAUTH2)
+  @ConditionalOnMissingBean(name = "oauth2ReactiveSecurityFilterChainProcessor")
+  public GatewayServerSecurityFilterChainProcessor oauth2ReactiveSecurityFilterChainProcessor(
+    ApiDocumentRepository apiDocumentRepository) {
+
+    return new OAuth2ReactiveSecurityFilterChainProcessor(apiDocumentRepository);
+  }
+
+  @Bean
+  @Order(SecurityFilterChainProcessorOrders.SWAGGER_PERMIT_ALL)
+  @ConditionalOnMissingBean(name = "swaggerPermitAllSecurityFilterChainProcessor")
+  public GatewayServerSecurityFilterChainProcessor swaggerPermitAllSecurityFilterChainProcessor(
+    SwaggerUiConfigProperties properties) {
+
+    String[] uris = new String[]{"/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html"};
+    if (StringUtils.hasText(properties.getConfigUrl())) {
+      uris = ArrayUtils.add(uris, properties.getConfigUrl());
+    }
+    return new PermitAllSecurityFilterChainProcessor(uris);
+  }
+
+  @Bean
   @ConditionalOnMissingBean(name = "gatewaySecurityWebFilterChain")
-  public SecurityWebFilterChain gatewaySecurityWebFilterChain(ServerHttpSecurity http) {
-    return http.csrf().disable()
-      .authorizeExchange((exchange) ->
-        exchange.pathMatchers("/oauth2/**").permitAll()
-          .anyExchange().access(new OAuth2ReactiveAuthorizationManager())
-      )
-      .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt)
-      .build();
+  public SecurityWebFilterChain gatewaySecurityWebFilterChain(
+    ServerHttpSecurity http, List<GatewayServerSecurityFilterChainProcessor> processors) throws Exception {
+
+    for (GatewayServerSecurityFilterChainProcessor processor : processors) {
+      processor.preBuild(http);
+    }
+
+    SecurityWebFilterChain result = http.build();
+
+    for (GatewayServerSecurityFilterChainProcessor processor : processors) {
+      processor.postBuild(http);
+    }
+
+    return result;
   }
 
   @Bean
@@ -161,5 +208,13 @@ public class GatewayAutoConfiguration {
       MySqlDialect.INSTANCE,
       new StringClientSettingsConverter(objectMapper)
     );
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "swaggerConfigApi")
+  public SwaggerConfigApi swaggerConfigApi(ObjectProvider<SwaggerConfigResource> swaggerConfigResources,
+                                           ApiDocumentRepository apiDocumentRepository) {
+
+    return new SwaggerConfigApi(swaggerConfigResources, apiDocumentRepository);
   }
 }

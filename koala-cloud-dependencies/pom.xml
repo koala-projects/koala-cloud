@@ -23,6 +23,10 @@
     <lombok.version>1.18.28</lombok.version>
     <!--maven-->
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+
+    <!--第三方-->
+    <bcprov.version>1.75</bcprov.version>
+    <hutool.version>5.8.22</hutool.version>
   </properties>
 
   <dependencyManagement>
@@ -58,6 +62,17 @@
         <groupId>cn.koala.cloud</groupId>
         <artifactId>koala-cloud-gateway-starter</artifactId>
         <version>${revision}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15to18</artifactId>
+        <version>${bcprov.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>${hutool.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

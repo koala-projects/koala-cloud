@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
@@ -46,6 +45,7 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
     log.setId(exchange.getAttribute(ServerWebExchange.LOG_ID_ATTRIBUTE));
     log.setRequestTime(LocalDateTime.now());
     log.setClient(toJson(exchange.getAttribute(RegisteredClient.class.getName())));
+    log.setRoute(toJson(exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR)));
     log.setApi(toJson(exchange.getAttribute(Api.class.getName())));
     log.setApiAuthorization(toJson(exchange.getAttribute(ApiAuthorization.class.getName())));
     log.setRequestUri(exchange.getRequest().getURI().toString());
@@ -61,25 +61,10 @@ public class ApiRequestLogGlobalFilter implements GlobalFilter, Ordered {
 
     Mono<ApiRequestLog> result = Mono.defer(() -> Mono.just(log));
 
-    result = setRoute(exchange, result);
-
     result = setResource(exchange, result);
 
     log.setLogTime(LocalDateTime.now());
 
-    return result;
-  }
-
-  private Mono<ApiRequestLog> setRoute(ServerWebExchange exchange, Mono<ApiRequestLog> result) {
-    Route gatewayRoute = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
-    if (gatewayRoute != null && StringUtils.hasText(gatewayRoute.getId())) {
-      result = result.flatMap(log ->
-        routeRepository.findById(gatewayRoute.getId()).map(route -> {
-          log.setRoute(toJson(route));
-          return log;
-        })
-      );
-    }
     return result;
   }
 

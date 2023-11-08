@@ -1,5 +1,9 @@
 package cn.koala.cloud.gateway.security.authorization;
 
+import cn.koala.cloud.gateway.model.ApiDocument;
+import cn.koala.cloud.gateway.repository.ApiDocumentRepository;
+import cn.koala.persist.domain.YesNo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -9,6 +13,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -18,16 +23,18 @@ import java.util.Map;
  *
  * @author Houtaroy
  */
+@RequiredArgsConstructor
 public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
   private final AuthenticationTrustResolver authTrustResolver = new AuthenticationTrustResolverImpl();
+  private final ApiDocumentRepository apiDocumentRepository;
 
   @Override
   public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext object) {
     return authentication.filter(this::isNotAnonymous)
-      .doOnNext(auth -> this.addExchangeAttributes(auth, object))
+      .doOnNext(auth -> addExchangeAttributes(auth, object))
       .map(this::getAuthorizationDecision)
-      .defaultIfEmpty(new AuthorizationDecision(false));
+      .switchIfEmpty(Mono.defer(() -> obtainEmptyAuthorizationDecision(object)));
   }
 
   /**
@@ -56,5 +63,16 @@ public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorization
 
   private AuthorizationDecision getAuthorizationDecision(Authentication authentication) {
     return new AuthorizationDecision(authentication.isAuthenticated());
+  }
+
+  private Mono<AuthorizationDecision> obtainEmptyAuthorizationDecision(AuthorizationContext object) {
+    return isApiDocument(object.getExchange()).map(AuthorizationDecision::new);
+  }
+
+  private Mono<Boolean> isApiDocument(ServerWebExchange exchange) {
+    return apiDocumentRepository.findByIsEnabledAndIsDeleted(YesNo.YES.getValue(), YesNo.NO.getValue())
+      .map(ApiDocument::getUri)
+      .collectList()
+      .map(uris -> uris.contains(exchange.getRequest().getPath().value()));
   }
 }
