@@ -40,7 +40,7 @@ public class ApiAuthorizationQuotaGatewayFilterFactory extends AbstractGatewayFi
           ? GatewayUtils.setResponse(exchange, HttpStatus.TOO_MANY_REQUESTS, "调用超过接口授权配额限制")
           : chain.filter(exchange)
       );
-    }, FilterOrders.API_IP);
+    }, FilterOrders.API_AUTHORIZATION_QUOTA);
   }
 
   public static class Config {

@@ -36,7 +36,7 @@ public class ApiAuthorizationIpGatewayFilterFactory extends AbstractGatewayFilte
         return chain.filter(exchange);
       }
       return GatewayUtils.setResponse(exchange, HttpStatus.FORBIDDEN, "IP地址不在白名单中");
-    }, FilterOrders.API_IP);
+    }, FilterOrders.API_AUTHORIZATION_IP);
   }
 
   private String obtainIp(ServerHttpRequest request) {

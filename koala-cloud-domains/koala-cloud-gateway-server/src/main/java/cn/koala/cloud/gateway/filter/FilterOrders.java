@@ -18,5 +18,6 @@ public interface FilterOrders {
   int API_RESPONSE_LOG = -1000;
 
   int API_AUTHORIZATION = 1000;
-  int API_IP = 1100;
+  int API_AUTHORIZATION_IP = 1100;
+  int API_AUTHORIZATION_QUOTA = 1200;
 }
