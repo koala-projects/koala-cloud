@@ -23,13 +23,23 @@ public class ApiRequestLog implements Persistable<String> {
   @Id
   private String id;
 
+  private String clientId;
+
   private String client;
+
+  private String routeId;
 
   private String route;
 
+  private Long resourceId;
+
   private String resource;
 
+  private Long apiId;
+
   private String api;
+
+  private Long apiAuthorizationId;
 
   private String apiAuthorization;
 

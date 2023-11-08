@@ -10,7 +10,8 @@ import cn.koala.cloud.gateway.filter.EncryptResponseGlobalFilter;
 import cn.koala.cloud.gateway.filter.RegisteredClientGlobalFilter;
 import cn.koala.cloud.gateway.filter.ResourceAttributeGlobalFilter;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
-import cn.koala.cloud.gateway.filter.factory.ApiIpGatewayFilterFactory;
+import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationIpGatewayFilterFactory;
+import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationQuotaGatewayFilterFactory;
 import cn.koala.cloud.gateway.model.converter.StringClientSettingsConverter;
 import cn.koala.cloud.gateway.repository.ApiAuthorizationRepository;
 import cn.koala.cloud.gateway.repository.ApiDocumentRepository;
@@ -102,10 +103,10 @@ public class GatewayAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean(name = "apiRequestLogGlobalFilter")
   @ConditionalOnProperty(prefix = "koala.cloud.gateway", name = "logging", havingValue = "true", matchIfMissing = true)
-  public GlobalFilter apiRequestLogGlobalFilter(
-    ApiRequestLogRepository apiRequestLogRepository, ResourceRepository resourceRepository, ObjectMapper objectMapper) {
+  public GlobalFilter apiRequestLogGlobalFilter(ApiRequestLogRepository apiRequestLogRepository,
+                                                ObjectMapper objectMapper) {
 
-    return new ApiRequestLogGlobalFilter(apiRequestLogRepository, resourceRepository, objectMapper);
+    return new ApiRequestLogGlobalFilter(apiRequestLogRepository, objectMapper);
   }
 
   @Bean
@@ -135,9 +136,17 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "apiIpGatewayFilterFactory")
-  public GatewayFilterFactory<ApiIpGatewayFilterFactory.Config> apiIpGatewayFilterFactory() {
-    return new ApiIpGatewayFilterFactory();
+  @ConditionalOnMissingBean(name = "apiAuthorizationIpGatewayFilterFactory")
+  public GatewayFilterFactory<ApiAuthorizationIpGatewayFilterFactory.Config> apiAuthorizationIpGatewayFilterFactory() {
+    return new ApiAuthorizationIpGatewayFilterFactory();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(name = "apiAuthorizationQuotaGatewayFilterFactory")
+  public GatewayFilterFactory<ApiAuthorizationQuotaGatewayFilterFactory.Config>
+  apiAuthorizationQuotaGatewayFilterFactory(ApiRequestLogRepository apiRequestLogRepository) {
+    
+    return new ApiAuthorizationQuotaGatewayFilterFactory(apiRequestLogRepository);
   }
 
   @Order(Ordered.HIGHEST_PRECEDENCE)

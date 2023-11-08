@@ -2,6 +2,7 @@ package cn.koala.cloud.gateway.filter.factory;
 
 import cn.koala.cloud.gateway.filter.FilterOrders;
 import cn.koala.cloud.gateway.model.ApiAuthorization;
+import cn.koala.cloud.gateway.util.GatewayUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -14,13 +15,13 @@ import java.net.InetSocketAddress;
 import java.util.Optional;
 
 /**
- * 接口IP校验网关过滤器工厂
+ * 接口授权IP校验网关过滤器工厂
  *
  * @author Houtaroy
  */
-public class ApiIpGatewayFilterFactory extends AbstractGatewayFilterFactory<ApiIpGatewayFilterFactory.Config> {
+public class ApiAuthorizationIpGatewayFilterFactory extends AbstractGatewayFilterFactory<ApiAuthorizationIpGatewayFilterFactory.Config> {
 
-  public ApiIpGatewayFilterFactory() {
+  public ApiAuthorizationIpGatewayFilterFactory() {
     super(Config.class);
   }
 
@@ -34,8 +35,7 @@ public class ApiIpGatewayFilterFactory extends AbstractGatewayFilterFactory<ApiI
       if (authorization.getIps().contains(obtainIp(exchange.getRequest()))) {
         return chain.filter(exchange);
       }
-      exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-      return exchange.getResponse().setComplete();
+      return GatewayUtils.setResponse(exchange, HttpStatus.FORBIDDEN, "IP地址不在白名单中");
     }, FilterOrders.API_IP);
   }
 
