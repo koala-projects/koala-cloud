@@ -14,6 +14,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -49,8 +50,13 @@ public class DecryptRequestGlobalFilter implements GlobalFilter, Ordered {
       return chain.filter(exchange);
     }
 
+    String sm4Key = client.getSm4Key();
+    if (!StringUtils.hasText(sm4Key)) {
+      return GatewayUtils.setResponse(exchange, HttpStatus.BAD_REQUEST, "获取客户端密钥失败");
+    }
+
     return DataBufferUtils.join(exchange.getRequest().getBody())
-      .flatMap(dataBuffer -> decrypt(dataBuffer, client.getSm4Key()))
+      .flatMap(dataBuffer -> decrypt(dataBuffer, sm4Key))
       .map(decryptedBody -> new CustomRequestBodyDecorator(exchange.getRequest(), decryptedBody))
       .flatMap(request -> chain.filter(exchange.mutate().request(request).build()));
   }

@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -34,8 +35,12 @@ public abstract class GatewayUtils {
   public static Mono<Void> setResponse(ServerWebExchange exchange, HttpStatus status, String message) {
     ServerWebExchangeUtils.setResponseStatus(exchange, HttpStatus.TOO_MANY_REQUESTS);
     exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-    String body = String.format(RESPONSE_MESSAGE_TEMPLATE, status.value(), message);
-    DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8));
+    DataBuffer buffer = obtainResponseDataBuffer(exchange.getResponse(), status, message);
     return exchange.getResponse().writeWith(Mono.just(buffer));
+  }
+
+  public static DataBuffer obtainResponseDataBuffer(ServerHttpResponse response, HttpStatus status, String message) {
+    String body = String.format(RESPONSE_MESSAGE_TEMPLATE, status.value(), message);
+    return response.bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8));
   }
 }
