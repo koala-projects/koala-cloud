@@ -17,8 +17,7 @@
   <modules>
     <module>koala-cloud-authorization-server</module>
     <module>koala-cloud-gateway</module>
-    <module>koala-cloud-provider</module>
-    <module>koala-cloud-consumer</module>
+    <module>koala-cloud-service-demo</module>
   </modules>
 
   <properties>

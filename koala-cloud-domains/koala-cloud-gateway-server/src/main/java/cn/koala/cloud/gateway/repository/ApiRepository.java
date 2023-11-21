@@ -11,5 +11,6 @@ import reactor.core.publisher.Flux;
  */
 public interface ApiRepository extends ReactiveCrudRepository<Api, Long> {
 
-  Flux<Api> findByResourceIdAndIsEnabledAndIsDeleted(Long resourceId, Integer isEnabled, Integer isDeleted);
+  Flux<Api> findByResourceIdAndIsEnabledAndIsDeletedOrderBySortIndex(Long resourceId, Integer isEnabled,
+                                                                     Integer isDeleted);
 }

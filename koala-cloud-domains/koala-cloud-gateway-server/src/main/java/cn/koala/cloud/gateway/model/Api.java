@@ -38,6 +38,8 @@ public class Api {
 
   private Integer isPermissible;
 
+  private Integer sortIndex;
+
   private Integer isEnabled;
 
   private Long createdBy;

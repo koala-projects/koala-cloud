@@ -34,7 +34,8 @@ public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorization
     return authentication.filter(this::isNotAnonymous)
       .doOnNext(auth -> addExchangeAttributes(auth, object))
       .map(this::getAuthorizationDecision)
-      .switchIfEmpty(Mono.defer(() -> obtainEmptyAuthorizationDecision(object)));
+      .defaultIfEmpty(new AuthorizationDecision(true));
+    // .switchIfEmpty(Mono.defer(() -> obtainEmptyAuthorizationDecision(object)));
   }
 
   /**

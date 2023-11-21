@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Houtaroy
  */
+@Deprecated
 public class AccessTokenGatewayFilterFactory extends AbstractGatewayFilterFactory<AccessTokenGatewayFilterFactory.Config> {
 
   private final OAuth2AuthorizationRepository oauth2AuthorizationRepository;

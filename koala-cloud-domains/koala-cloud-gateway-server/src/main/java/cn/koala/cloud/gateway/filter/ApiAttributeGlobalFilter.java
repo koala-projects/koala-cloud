@@ -31,7 +31,7 @@ public class ApiAttributeGlobalFilter implements GlobalFilter, Ordered {
     if (resource == null) {
       return chain.filter(exchange);
     }
-    return repository.findByResourceIdAndIsEnabledAndIsDeleted(
+    return repository.findByResourceIdAndIsEnabledAndIsDeletedOrderBySortIndex(
         resource.getId(),
         YesNo.YES.getValue(),
         YesNo.NO.getValue()

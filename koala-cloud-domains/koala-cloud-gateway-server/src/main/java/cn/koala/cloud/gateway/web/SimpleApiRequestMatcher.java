@@ -3,11 +3,7 @@ package cn.koala.cloud.gateway.web;
 import cn.koala.cloud.gateway.model.Api;
 import lombok.NonNull;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 接口请求匹配器简单实现
@@ -21,11 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleApiRequestMatcher implements ApiRequestMatcher {
 
   private final PathPatternParser parser = new PathPatternParser();
-  private final Map<Long, PathPattern> patterns = new ConcurrentHashMap<>();
 
   @Override
   public boolean matches(@NonNull Api api, @NonNull ServerHttpRequest request) {
-    return request.getMethod().matches(api.getMethod())
-      && patterns.computeIfAbsent(api.getId(), key -> parser.parse(api.getPath())).matches(request.getPath());
+    return request.getMethod().matches(api.getMethod()) && parser.parse(api.getPath()).matches(request.getPath());
   }
 }

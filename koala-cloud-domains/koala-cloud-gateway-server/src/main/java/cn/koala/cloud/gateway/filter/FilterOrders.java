@@ -8,7 +8,7 @@ package cn.koala.cloud.gateway.filter;
 public interface FilterOrders {
 
   int CACHE_REQUEST_BODY_STRING = 100;
-  int REGISTERED_CLIENT = 200;
+  int REGISTERED_CLIENT_ATTRIBUTE = 200;
   int RESOURCE_ATTRIBUTE = 300;
   int API_ATTRIBUTE = 400;
   int API_AUTHORIZATION_ATTRIBUTE = 500;

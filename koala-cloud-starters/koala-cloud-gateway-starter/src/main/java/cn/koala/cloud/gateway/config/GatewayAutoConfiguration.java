@@ -7,9 +7,8 @@ import cn.koala.cloud.gateway.filter.ApiResponseLogGlobalFilter;
 import cn.koala.cloud.gateway.filter.CacheRequestBodyStringGlobalFilter;
 import cn.koala.cloud.gateway.filter.DecryptRequestGlobalFilter;
 import cn.koala.cloud.gateway.filter.EncryptResponseGlobalFilter;
-import cn.koala.cloud.gateway.filter.RegisteredClientGlobalFilter;
+import cn.koala.cloud.gateway.filter.RegisteredAttributeClientGlobalFilter;
 import cn.koala.cloud.gateway.filter.ResourceAttributeGlobalFilter;
-import cn.koala.cloud.gateway.filter.factory.AccessTokenGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationIpGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationQuotaGatewayFilterFactory;
@@ -79,9 +78,9 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "registeredClientGlobalFilter")
-  public GlobalFilter registeredClientGlobalFilter(RegisteredClientRepository registeredClientRepository) {
-    return new RegisteredClientGlobalFilter(registeredClientRepository);
+  @ConditionalOnMissingBean(name = "registeredAttributeClientGlobalFilter")
+  public GlobalFilter registeredAttributeClientGlobalFilter(RegisteredClientRepository registeredClientRepository) {
+    return new RegisteredAttributeClientGlobalFilter(registeredClientRepository);
   }
 
   @Bean
@@ -132,17 +131,11 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(name = "accessTokenGatewayFilterFactory")
-  public GatewayFilterFactory<AccessTokenGatewayFilterFactory.Config> accessTokenGatewayFilterFactory(
+  @ConditionalOnMissingBean(name = "apiAuthorizationGatewayFilterFactory")
+  public GatewayFilterFactory<ApiAuthorizationGatewayFilterFactory.Config> apiAuthorizationGatewayFilterFactory(
     OAuth2AuthorizationRepository oauth2AuthorizationRepository) {
 
-    return new AccessTokenGatewayFilterFactory(oauth2AuthorizationRepository);
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(name = "apiAuthorizationGatewayFilterFactory")
-  public GatewayFilterFactory<ApiAuthorizationGatewayFilterFactory.Config> apiAuthorizationGatewayFilterFactory() {
-    return new ApiAuthorizationGatewayFilterFactory();
+    return new ApiAuthorizationGatewayFilterFactory(oauth2AuthorizationRepository);
   }
 
   @Bean

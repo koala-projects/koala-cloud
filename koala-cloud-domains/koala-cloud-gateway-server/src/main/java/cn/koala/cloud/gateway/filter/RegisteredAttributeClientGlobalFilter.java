@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
  * @author Houtaroy
  */
 @RequiredArgsConstructor
-public class RegisteredClientGlobalFilter implements GlobalFilter, Ordered {
+public class RegisteredAttributeClientGlobalFilter implements GlobalFilter, Ordered {
 
   private final RegisteredClientRepository repository;
 
@@ -36,6 +36,6 @@ public class RegisteredClientGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return FilterOrders.REGISTERED_CLIENT;
+    return FilterOrders.REGISTERED_CLIENT_ATTRIBUTE;
   }
 }

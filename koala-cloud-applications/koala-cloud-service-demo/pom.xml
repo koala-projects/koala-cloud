@@ -3,8 +3,8 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>koala-cloud-consumer</artifactId>
-  <description>考拉微服务消费者</description>
+  <artifactId>koala-cloud-service-demo</artifactId>
+  <description>服务示例</description>
 
   <parent>
     <groupId>cn.koala.cloud</groupId>
@@ -32,18 +32,12 @@
     </dependency>
 
     <dependency>
-      <groupId>cn.koala</groupId>
-      <artifactId>koala-query-starter</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>cn.koala</groupId>
-      <artifactId>koala-system-starter</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.32</version>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
   </dependencies>
 

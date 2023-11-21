@@ -57,6 +57,82 @@ CREATE TABLE oauth2_authorization
   PRIMARY KEY (id)
 );
 
+-- 认证授权服务
+-- 用户表
+CREATE TABLE k_user
+(
+  `id`                 BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `username`           VARCHAR(100) NOT NULL COMMENT '用户名',
+  `password`           VARCHAR(500) NOT NULL COMMENT '密码',
+  `nickname`           VARCHAR(100) NOT NULL COMMENT '昵称',
+  `avatar`             VARCHAR(500) COMMENT '头像',
+  `email`              VARCHAR(100) COMMENT '邮箱',
+  `mobile`             VARCHAR(100) COMMENT '手机号',
+  `remark`             VARCHAR(500) COMMENT '备注',
+  `sort_index`         INT                   DEFAULT 0 COMMENT '排序索引',
+  `is_enabled`         INT          NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_systemic`        INT          NOT NULL DEFAULT 0 COMMENT '是否系统',
+  `is_deleted`         INT          NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `created_by`         BIGINT       NOT NULL COMMENT '创建人ID',
+  `created_time`       DATETIME     NOT NULL COMMENT '创建时间',
+  `last_modified_by`   BIGINT COMMENT '最后更新人ID',
+  `last_modified_time` DATETIME COMMENT '最后更新时间',
+  `deleted_by`         BIGINT COMMENT '删除人ID',
+  `deleted_time`       DATETIME COMMENT '删除时间',
+  PRIMARY KEY (id)
+) COMMENT = '用户表';
+
+-- 认证日志表
+CREATE TABLE k_authenticate_log
+(
+  `id`                BIGINT   NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `remote_address`    VARCHAR(500) COMMENT '远程地址',
+  `session_id`        VARCHAR(100) COMMENT 'SessionId',
+  `authentication`    json     NOT NULL COMMENT '认证信息',
+  `is_successful`     INT      NOT NULL COMMENT '是否成功',
+  `exception_message` VARCHAR(500) COMMENT '异常信息',
+  `log_time`          DATETIME NOT NULL COMMENT '日志时间',
+  PRIMARY KEY (id)
+) COMMENT = '认证日志表';
+
+-- 登录日志表
+DROP TABLE IF EXISTS k_login_log;
+CREATE TABLE k_login_log
+(
+  `id`                BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `remote_address`    VARCHAR(500) COMMENT '远程地址',
+  `session_id`        VARCHAR(100) COMMENT 'SessionId',
+  `user_id`           INT COMMENT '用户id',
+  `username`          VARCHAR(100) NOT NULL COMMENT '用户名',
+  `password`          VARCHAR(500) COMMENT '密码',
+  `is_successful`     INT          NOT NULL COMMENT '是否成功',
+  `exception_message` VARCHAR(500) COMMENT '异常信息',
+  `log_time`          DATETIME     NOT NULL COMMENT '日志时间',
+  PRIMARY KEY (id)
+) COMMENT = '登录日志表';
+
+-- 网关
+-- 密钥表
+DROP TABLE IF EXISTS k_secret_key;
+CREATE TABLE k_secret_key
+(
+  `id`                 INT           NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `type`               INT           NOT NULL COMMENT '密钥类型',
+  `public_key`         VARCHAR(2000) NOT NULL COMMENT '公钥',
+  `private_key`        VARCHAR(2000) COMMENT '私钥',
+  `is_enabled`         INT           NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_systemic`        INT           NOT NULL DEFAULT 0 COMMENT '是否系统',
+  `is_deleted`         INT           NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `created_by`         VARCHAR(32)   NOT NULL COMMENT '创建人ID',
+  `created_time`       DATETIME      NOT NULL COMMENT '创建时间',
+  `last_modified_by`   VARCHAR(32) COMMENT '最后更新人ID',
+  `last_modified_time` DATETIME COMMENT '最后更新时间',
+  `deleted_by`         VARCHAR(32) COMMENT '删除人ID',
+  `deleted_time`       DATETIME COMMENT '删除时间',
+  PRIMARY KEY (id)
+) COMMENT = '密钥表';
+
+-- 资源表
 CREATE TABLE k_resource
 (
   `id`                 INT          NOT NULL COMMENT '主键',
@@ -77,6 +153,30 @@ CREATE TABLE k_resource
   PRIMARY KEY (id)
 ) COMMENT = '资源表';
 
+-- 路由表
+CREATE TABLE k_route
+(
+  `id`                 VARCHAR(90) NOT NULL COMMENT '主键',
+  `name`               VARCHAR(90) NOT NULL COMMENT '路由名称',
+  `resource_id`        INT         NOT NULL COMMENT '资源id',
+  `uri`                VARCHAR(90) NOT NULL COMMENT '资源标志符',
+  `predicates`         JSON COMMENT '路由断言',
+  `filters`            JSON COMMENT '路由过滤器',
+  `metadata`           JSON COMMENT '路由元数据',
+  `sort_index`         INT                  DEFAULT 0 COMMENT '排序索引',
+  `is_enabled`         INT         NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_systemic`        INT         NOT NULL DEFAULT 0 COMMENT '是否系统',
+  `is_deleted`         INT         NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `created_by`         VARCHAR(32) NOT NULL COMMENT '创建人ID',
+  `created_time`       DATETIME    NOT NULL COMMENT '创建时间',
+  `last_modified_by`   VARCHAR(32) COMMENT '最后更新人ID',
+  `last_modified_time` DATETIME COMMENT '最后更新时间',
+  `deleted_by`         VARCHAR(32) COMMENT '删除人ID',
+  `deleted_time`       DATETIME COMMENT '删除时间',
+  PRIMARY KEY (id)
+) COMMENT = '路由表';
+
+-- 接口表
 CREATE TABLE k_api
 (
   `id`                 INT         NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -100,6 +200,31 @@ CREATE TABLE k_api
   PRIMARY KEY (id)
 ) COMMENT = '接口表';
 
+-- 接口文档表
+DROP TABLE IF EXISTS k_api_document;
+CREATE TABLE k_api_document
+(
+  `id`                 INT          NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `resource_id`        INT          NOT NULL COMMENT '资源id',
+  `code`               VARCHAR(90)  NOT NULL COMMENT '接口文档代码',
+  `name`               VARCHAR(90)  NOT NULL COMMENT '接口文档名称',
+  `version`            VARCHAR(90)  NOT NULL COMMENT '接口文档版本',
+  `uri`                VARCHAR(500) NOT NULL COMMENT '接口文档地址',
+  `sort_index`         INT          NOT NULL DEFAULT 0 COMMENT '排序索引',
+  `is_enabled`         INT          NOT NULL DEFAULT 1 COMMENT '是否启用',
+  `is_systemic`        INT          NOT NULL DEFAULT 0 COMMENT '是否系统',
+  `is_deleted`         INT          NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `created_by`         VARCHAR(32)  NOT NULL COMMENT '创建人ID',
+  `created_time`       DATETIME     NOT NULL COMMENT '创建时间',
+  `last_modified_by`   VARCHAR(32) COMMENT '最后更新人ID',
+  `last_modified_time` DATETIME COMMENT '最后更新时间',
+  `deleted_by`         VARCHAR(32) COMMENT '删除人ID',
+  `deleted_time`       DATETIME COMMENT '删除时间',
+  PRIMARY KEY (id)
+) COMMENT = '接口文档表';
+
+
+-- 接口授权表
 CREATE TABLE k_api_authorization
 (
   `id`                 INT         NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -118,28 +243,7 @@ CREATE TABLE k_api_authorization
   PRIMARY KEY (id)
 ) COMMENT = '接口授权表';
 
-CREATE TABLE k_route
-(
-  `id`                 VARCHAR(90) NOT NULL COMMENT '主键',
-  `name`               VARCHAR(90) NOT NULL COMMENT '路由名称',
-  `resource_id`        INT         NOT NULL COMMENT '资源id',
-  `uri`                VARCHAR(90) NOT NULL COMMENT '资源标志符',
-  `predicates`         JSON COMMENT '路由断言',
-  `filters`            JSON COMMENT '路由过滤器',
-  `metadata`           JSON COMMENT '路由元数据',
-  `sort_index`         INT                  DEFAULT 0 COMMENT '排序索引',
-  `is_enabled`         INT         NOT NULL DEFAULT 1 COMMENT '是否启用',
-  `is_systemic`        INT         NOT NULL DEFAULT 0 COMMENT '是否系统',
-  `is_deleted`         INT         NOT NULL DEFAULT 0 COMMENT '是否删除',
-  `created_by`         VARCHAR(32) NOT NULL COMMENT '创建人ID',
-  `created_time`       DATETIME    NOT NULL COMMENT '创建时间',
-  `last_modified_by`   VARCHAR(32) COMMENT '最后更新人ID',
-  `last_modified_time` DATETIME COMMENT '最后更新时间',
-  `deleted_by`         VARCHAR(32) COMMENT '删除人ID',
-  `deleted_time`       DATETIME COMMENT '删除时间',
-  PRIMARY KEY (id)
-) COMMENT = '路由表';
-
+-- 接口请求日志表
 CREATE TABLE k_api_request_log
 (
   `id`                   VARCHAR(36)   NOT NULL COMMENT '主键',
@@ -160,6 +264,7 @@ CREATE TABLE k_api_request_log
   PRIMARY KEY (id)
 ) COMMENT = '接口请求日志表';
 
+-- 接口响应日志表
 CREATE TABLE k_api_response_log
 (
   `id`               VARCHAR(36) NOT NULL COMMENT '主键',
@@ -172,6 +277,7 @@ CREATE TABLE k_api_response_log
   PRIMARY KEY (id)
 ) COMMENT = '接口响应日志表';
 
+-- 接口异常日志表
 CREATE TABLE k_api_exception_log
 (
   `id`       VARCHAR(36) NOT NULL COMMENT '主键',

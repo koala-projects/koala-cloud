@@ -1,10 +1,10 @@
 server:
-  port: 8002
+  port: 8003
   forward-headers-strategy: framework
 
 spring:
   application:
-    name: koala-cloud-provider
+    name: koala-cloud-service-demo
   cloud:
     nacos:
       discovery:
@@ -15,4 +15,11 @@ spring:
         namespace: koala-cloud
   config:
     import:
-      - nacos:koala-cloud-provider.yml?refresh=true
+      - nacos:koala-cloud-service-demo.yml?refresh=true
+  main:
+    allow-bean-definition-overriding: true
+
+springdoc:
+  swagger-ui:
+    doc-expansion: none
+    tags-sorter: alpha
