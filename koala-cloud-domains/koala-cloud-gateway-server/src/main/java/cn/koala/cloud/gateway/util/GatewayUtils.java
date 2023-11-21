@@ -33,7 +33,7 @@ public abstract class GatewayUtils {
   }
 
   public static Mono<Void> setResponse(ServerWebExchange exchange, HttpStatus status, String message) {
-    ServerWebExchangeUtils.setResponseStatus(exchange, HttpStatus.TOO_MANY_REQUESTS);
+    ServerWebExchangeUtils.setResponseStatus(exchange, status);
     exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
     DataBuffer buffer = obtainResponseDataBuffer(exchange.getResponse(), status, message);
     return exchange.getResponse().writeWith(Mono.just(buffer));

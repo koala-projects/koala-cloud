@@ -33,7 +33,17 @@
 
     <dependency>
       <groupId>cn.koala</groupId>
-      <artifactId>koala-web-starter</artifactId>
+      <artifactId>koala-query-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>cn.koala</groupId>
+      <artifactId>koala-system-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.32</version>
     </dependency>
   </dependencies>
 

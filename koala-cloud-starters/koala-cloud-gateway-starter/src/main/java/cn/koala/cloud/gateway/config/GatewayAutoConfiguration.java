@@ -9,6 +9,7 @@ import cn.koala.cloud.gateway.filter.DecryptRequestGlobalFilter;
 import cn.koala.cloud.gateway.filter.EncryptResponseGlobalFilter;
 import cn.koala.cloud.gateway.filter.RegisteredClientGlobalFilter;
 import cn.koala.cloud.gateway.filter.ResourceAttributeGlobalFilter;
+import cn.koala.cloud.gateway.filter.factory.AccessTokenGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationIpGatewayFilterFactory;
 import cn.koala.cloud.gateway.filter.factory.ApiAuthorizationQuotaGatewayFilterFactory;
@@ -19,6 +20,7 @@ import cn.koala.cloud.gateway.repository.ApiExceptionLogRepository;
 import cn.koala.cloud.gateway.repository.ApiRepository;
 import cn.koala.cloud.gateway.repository.ApiRequestLogRepository;
 import cn.koala.cloud.gateway.repository.ApiResponseLogRepository;
+import cn.koala.cloud.gateway.repository.OAuth2AuthorizationRepository;
 import cn.koala.cloud.gateway.repository.RegisteredClientRepository;
 import cn.koala.cloud.gateway.repository.ResourceRepository;
 import cn.koala.cloud.gateway.repository.RouteRepository;
@@ -130,6 +132,14 @@ public class GatewayAutoConfiguration {
   }
 
   @Bean
+  @ConditionalOnMissingBean(name = "accessTokenGatewayFilterFactory")
+  public GatewayFilterFactory<AccessTokenGatewayFilterFactory.Config> accessTokenGatewayFilterFactory(
+    OAuth2AuthorizationRepository oauth2AuthorizationRepository) {
+
+    return new AccessTokenGatewayFilterFactory(oauth2AuthorizationRepository);
+  }
+
+  @Bean
   @ConditionalOnMissingBean(name = "apiAuthorizationGatewayFilterFactory")
   public GatewayFilterFactory<ApiAuthorizationGatewayFilterFactory.Config> apiAuthorizationGatewayFilterFactory() {
     return new ApiAuthorizationGatewayFilterFactory();
@@ -145,7 +155,7 @@ public class GatewayAutoConfiguration {
   @ConditionalOnMissingBean(name = "apiAuthorizationQuotaGatewayFilterFactory")
   public GatewayFilterFactory<ApiAuthorizationQuotaGatewayFilterFactory.Config>
   apiAuthorizationQuotaGatewayFilterFactory(ApiRequestLogRepository apiRequestLogRepository) {
-    
+
     return new ApiAuthorizationQuotaGatewayFilterFactory(apiRequestLogRepository);
   }
 

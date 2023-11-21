@@ -1,5 +1,7 @@
 server:
   port: 8000
+  servlet:
+    context-path: /
 
 management:
   endpoints:
@@ -9,14 +11,10 @@ management:
 
 logging:
   level:
-    org.springframework.security: debug
-    org.springframework.security.oauth2: debug
+    org.springframework.r2dbc: debug
+    cn.koala.cloud.gateway: debug
 
 spring:
-  r2dbc:
-    url: r2dbc:mysql://127.0.0.1:3306/koala_dev?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    username: koala
-    password: koala
   application:
     name: koala-cloud-gateway
   cloud:
@@ -30,8 +28,25 @@ spring:
   config:
     import:
       - nacos:koala-cloud-gateway.yml?refresh=true
+  jackson:
+    default-property-inclusion: non_empty
+  r2dbc:
+    url: r2dbc:mysql://127.0.0.1:3306/koala_cloud_demo?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: koala
+    password: Koala@2023
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8001
+          issuer-uri: http://192.168.100.77:8001
+
+koala:
+  cloud:
+    gateway:
+      dynamic-routing: true
+
+springdoc:
+  swagger-ui:
+    config-url: /gateway/swagger-config
+    tags-sorter: alpha
+    use-root-path: true

@@ -83,8 +83,12 @@
 
   <distributionManagement>
     <repository>
-      <id>Local</id>
-      <url>file:D:/Project/maven-repositories</url>
+      <id>koala-releases</id>
+      <url>file://D:/Project/koala-projects/maven-repository/releases/</url>
     </repository>
+    <snapshotRepository>
+      <id>koala-snapshots</id>
+      <url>file://D:/Project/koala-projects/maven-repository/snapshots/</url>
+    </snapshotRepository>
   </distributionManagement>
 </project>

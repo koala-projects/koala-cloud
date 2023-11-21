@@ -52,6 +52,8 @@ public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorization
     if (authentication.getPrincipal() instanceof Jwt jwt) {
       Map<String, Object> attributes = object.getExchange().getAttributes();
 
+      attributes.put(OAuth2ParameterNames.TOKEN, jwt.getTokenValue());
+
       AuthorizationGrantType grantType = new AuthorizationGrantType(jwt.getClaimAsString("grant_type"));
       attributes.put(AuthorizationGrantType.class.getName(), grantType);
 
