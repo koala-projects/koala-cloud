@@ -31,7 +31,6 @@ import cn.koala.cloud.gateway.security.config.SecurityFilterChainProcessorOrders
 import cn.koala.cloud.gateway.springdoc.SwaggerConfigApi;
 import cn.koala.cloud.gateway.task.RefreshRoutesTask;
 import cn.koala.cloud.gateway.web.ApiExceptionLogHandler;
-import cn.koala.cloud.gateway.web.SimpleApiRequestMatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
@@ -92,7 +91,7 @@ public class GatewayAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean(name = "apiAttributeGlobalFilter")
   public GlobalFilter apiAttributeGlobalFilter(ApiRepository apiRepository) {
-    return new ApiAttributeGlobalFilter(apiRepository, new SimpleApiRequestMatcher());
+    return new ApiAttributeGlobalFilter(apiRepository);
   }
 
   @Bean

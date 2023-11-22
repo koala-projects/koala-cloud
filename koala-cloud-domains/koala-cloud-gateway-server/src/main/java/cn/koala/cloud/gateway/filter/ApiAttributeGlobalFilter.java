@@ -4,6 +4,7 @@ import cn.koala.cloud.gateway.model.Api;
 import cn.koala.cloud.gateway.model.Resource;
 import cn.koala.cloud.gateway.repository.ApiRepository;
 import cn.koala.cloud.gateway.web.ApiRequestMatcher;
+import cn.koala.cloud.gateway.web.SimpleApiRequestMatcher;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -24,6 +25,10 @@ public class ApiAttributeGlobalFilter implements GlobalFilter, Ordered {
 
   private final ApiRepository repository;
   private final ApiRequestMatcher matcher;
+
+  public ApiAttributeGlobalFilter(ApiRepository apiRepository) {
+    this(apiRepository, new SimpleApiRequestMatcher());
+  }
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

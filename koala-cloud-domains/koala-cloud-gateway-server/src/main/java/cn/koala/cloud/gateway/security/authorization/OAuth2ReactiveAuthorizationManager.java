@@ -1,6 +1,5 @@
 package cn.koala.cloud.gateway.security.authorization;
 
-import cn.koala.cloud.gateway.model.ApiDocument;
 import cn.koala.cloud.gateway.repository.ApiDocumentRepository;
 import cn.koala.persist.domain.YesNo;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +33,7 @@ public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorization
     return authentication.filter(this::isNotAnonymous)
       .doOnNext(auth -> addExchangeAttributes(auth, object))
       .map(this::getAuthorizationDecision)
-      .defaultIfEmpty(new AuthorizationDecision(true));
-    // .switchIfEmpty(Mono.defer(() -> obtainEmptyAuthorizationDecision(object)));
+      .switchIfEmpty(Mono.defer(() -> obtainEmptyAuthorizationDecision(object)));
   }
 
   /**
@@ -73,9 +71,11 @@ public class OAuth2ReactiveAuthorizationManager implements ReactiveAuthorization
   }
 
   private Mono<Boolean> isApiDocument(ServerWebExchange exchange) {
-    return apiDocumentRepository.findByIsEnabledAndIsDeleted(YesNo.YES.getValue(), YesNo.NO.getValue())
-      .map(ApiDocument::getUri)
-      .collectList()
-      .map(uris -> uris.contains(exchange.getRequest().getPath().value()));
+    return apiDocumentRepository.findByUriAndIsEnabledAndIsDeleted(
+        exchange.getRequest().getPath().value(),
+        YesNo.YES.getValue(),
+        YesNo.NO.getValue()
+      )
+      .hasElement();
   }
 }
