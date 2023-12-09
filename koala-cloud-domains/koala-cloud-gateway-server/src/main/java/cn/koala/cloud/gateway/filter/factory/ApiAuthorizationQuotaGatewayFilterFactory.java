@@ -9,6 +9,8 @@ import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
 
+import java.util.Objects;
+
 /**
  * 接口授权配额校验网关过滤器工厂
  *
@@ -34,7 +36,7 @@ public class ApiAuthorizationQuotaGatewayFilterFactory extends AbstractGatewayFi
       return apiRequestLogRepository.countByClientIdAndApiIdAndRequestTimeAfter(
         authorization.getClientId(),
         authorization.getApiId(),
-        authorization.getCreatedTime()
+        Objects.requireNonNullElse(authorization.getLastModifiedTime(), authorization.getCreatedTime())
       ).flatMap(count ->
         count > authorization.getQuota()
           ? GatewayUtils.setResponse(exchange, HttpStatus.TOO_MANY_REQUESTS, "调用超过接口授权配额限制")
